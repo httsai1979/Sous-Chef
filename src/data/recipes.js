@@ -12,6 +12,8 @@ export const RECIPES = [
         prepTime: '5 min',
         calories: '200 kcal',
         freshness: 2,
+        costPerPortion: 1.2,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1522906456132-bf22adbc7079?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Greek Yogurt', baseQty: 150, unit: 'g', aisle: 'Dairy' },
@@ -35,6 +37,8 @@ export const RECIPES = [
         prepTime: '10 min',
         calories: '450 kcal',
         freshness: 2,
+        costPerPortion: 0.8,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1509722747041-619f3830c149?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Taco Shells', baseQty: 2, unit: 'pc', aisle: 'Bakery' },
@@ -59,6 +63,8 @@ export const RECIPES = [
         prepTime: '60 min',
         calories: '750 kcal',
         freshness: 2,
+        costPerPortion: 2.5,
+        seasonalMonths: [9, 10, 11, 12, 1, 2],
         image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Whole Chicken', nameVeg: 'Large Mushrooms', baseQty: 0.25, unit: 'pc', aisle: 'Meat & Fish' },
@@ -85,6 +91,8 @@ export const RECIPES = [
         prepTime: '5 min',
         calories: '250 kcal',
         freshness: 1,
+        costPerPortion: 1.0,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Greek Yogurt', baseQty: 150, unit: 'g', aisle: 'Dairy' },
@@ -109,6 +117,8 @@ export const RECIPES = [
         prepTime: '5 min',
         calories: '350 kcal',
         freshness: 1,
+        costPerPortion: 1.2,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Whole Chicken', nameVeg: 'Firm Tofu', baseQty: 0.1, unit: 'pc', aisle: 'Meat & Fish' },
@@ -134,6 +144,8 @@ export const RECIPES = [
         prepTime: '15 min',
         calories: '450 kcal',
         freshness: 1,
+        costPerPortion: 1.5,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Whole Chicken', nameVeg: 'Firm Tofu', baseQty: 0.15, unit: 'pc', aisle: 'Meat & Fish' },
@@ -160,6 +172,8 @@ export const RECIPES = [
         prepTime: '2 min',
         calories: '300 kcal',
         freshness: 2,
+        costPerPortion: 0.7,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Oats', baseQty: 40, unit: 'g', aisle: 'Pantry' },
@@ -185,6 +199,8 @@ export const RECIPES = [
         prepTime: '5 min',
         calories: '400 kcal',
         freshness: 2,
+        costPerPortion: 1.1,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1626700051175-6818013e184f?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Taco Shells', baseQty: 1, unit: 'pc', aisle: 'Bakery' },
@@ -211,6 +227,8 @@ export const RECIPES = [
         prepTime: '30 min',
         calories: '300 kcal',
         freshness: 3,
+        costPerPortion: 0.5,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1547592110-8036d3c2851d?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Whole Chicken', nameVeg: 'Large Mushrooms', baseQty: 0.1, unit: 'pc', aisle: 'Meat & Fish' },
@@ -236,6 +254,8 @@ export const RECIPES = [
         prepTime: '25 min',
         calories: '550 kcal',
         freshness: 2,
+        costPerPortion: 1.8,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Beef Mince', nameVeg: 'Canned Lentils', baseQty: 125, unit: 'g', aisle: 'Meat & Fish' },
@@ -260,6 +280,8 @@ export const RECIPES = [
         prepTime: '20 min',
         calories: '600 kcal',
         freshness: 3,
+        costPerPortion: 2.1,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Chicken Thighs', nameVeg: 'Canned Chickpeas', baseQty: 150, unit: 'g', aisle: 'Meat & Fish' },
@@ -283,6 +305,8 @@ export const RECIPES = [
         prepTime: '20 min',
         calories: '650 kcal',
         freshness: 3,
+        costPerPortion: 2.2,
+        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80',
         ingredients: [
             { name: 'Beef Burger Patties', nameVeg: 'Halloumi Blocks', baseQty: 1, unit: 'pc', aisle: 'Meat & Fish' },
@@ -307,5 +331,6 @@ export const AISLES = [
     'Dairy',
     'Bakery',
     'Pantry',
+    'Frozen',
     'PantryCheck'
 ];
