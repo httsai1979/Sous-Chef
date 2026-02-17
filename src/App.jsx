@@ -242,7 +242,7 @@ const App = () => {
                 <div className="ios-item">
                     <div style={{ flex: 1 }}>
                         <span style={{ fontWeight: 500 }}>Kid Portions</span>
-                        <div style={{ fontSize: '11px', color: var('--system-gray') }}>NHS Healthy Growth Calibrated</div>
+                        <div style={{ fontSize: '11px', color: 'var(--system-gray)' }}>NHS Healthy Growth Calibrated</div>
                     </div>
                     <div className="stepper">
                         <button onClick={() => setKids(Math.max(0, kids - 1))}>-</button>
