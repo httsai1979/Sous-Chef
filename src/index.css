@@ -4,17 +4,14 @@
   --primary: #1b4332;
   --secondary: #d4a373;
   --accent: #52b788;
-  --bg-light: #f3f4f6;
-  --surface: #ffffff;
-  --text-main: #111827;
-  --text-muted: #6b7280;
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --bg-lite: #f3f5f4;
+  --white: #ffffff;
+  --text: #111827;
+  --text-dim: #6b7280;
+  --radius-xl: 32px;
+  --radius-lg: 20px;
+  --radius-sm: 12px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -25,14 +22,55 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: var(--bg-light);
-  color: var(--text-main);
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  background-color: var(--bg-lite);
+  color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- Responsive Utility --- */
+/* --- Mobile-First Layout Core --- */
+.app-root {
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 95px;
+  }
+
+  /* Navigation buffer */
+  .layout-engine {
+    width: 100vw;
+  }
+
+  .viewer {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .app-root {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .layout-engine {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .desktop-header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1rem;
+  }
+}
+
+/* --- Navigation & Utility --- */
 .mobile-only {
   display: block;
 }
@@ -49,215 +87,101 @@ body {
   .desktop-only {
     display: block;
   }
-
-  body {
-    padding-bottom: 0;
-  }
 }
 
-@media (max-width: 768px) {
-  body {
-    padding-bottom: 90px;
-  }
-
-  /* Bottom Nav Space */
-  .app-container {
-    padding: 0;
-  }
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 85px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* --- Layout --- */
-.app-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1.5rem;
-}
-
-.main-layout {
+.nav-item {
+  background: none;
+  border: none;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  align-items: center;
+  gap: 4px;
+  color: #9ca3af;
+  font-weight: 700;
+  transition: 0.2s var(--ease);
 }
 
-@media (min-width: 769px) {
-  .main-layout {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-  }
+.nav-item.active {
+  color: var(--primary);
 }
 
-/* --- Glassmorphism --- */
+.nav-item svg {
+  font-size: 1.6rem;
+  transition: 0.3s var(--ease);
+}
+
+.nav-item.active svg {
+  transform: translateY(-3px);
+  filter: drop-shadow(0 4px 8px rgba(27, 67, 50, 0.2));
+}
+
+.nav-item span {
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* --- Components & Cards --- */
 .glass-card {
-  background: var(--surface);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  transition: var(--transition);
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.06);
 }
 
-/* --- Header --- */
-.app-header {
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e5e7eb;
+/* Plan View */
+.day-block {
+  margin-bottom: 3.5rem;
 }
 
-.header-content h1 {
-  font-size: 2rem;
-  letter-spacing: -2px;
-}
-
-.accent-text {
-  color: var(--accent);
-}
-
-.header-stats {
-  display: flex;
-  gap: 1rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #9ca3af;
-  text-transform: uppercase;
-  margin-top: 5px;
-}
-
-/* --- Dashboard / Settings --- */
-.dashboard-card {
-  padding: 1.5rem;
-  position: sticky;
-  top: 1.5rem;
-}
-
-.label-row {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 700;
-  font-size: 0.9rem;
-  margin-bottom: 5px;
-}
-
-.value-highlight {
-  color: var(--primary);
-}
-
-.modern-range {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 6px;
-  background: #e5e7eb;
-  border-radius: 5px;
-  outline: none;
-  margin: 10px 0;
-}
-
-.modern-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  background: var(--primary);
-  border-radius: 50%;
-  cursor: pointer;
-  border: 3px solid white;
-  box-shadow: var(--shadow-sm);
-}
-
-.pantry-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.pantry-chip {
-  padding: 6px 12px;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  border: 1px solid #e5e7eb;
-  background: white;
-  cursor: pointer;
-  transition: var(--transition);
-  font-weight: 600;
-}
-
-.pantry-chip.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 1.5rem;
-}
-
-.stat-card {
-  background: #f9fafb;
-  padding: 12px;
-  border-radius: 12px;
-  text-align: center;
-}
-
-.stat-label {
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  color: #9ca3af;
-  font-weight: 800;
-}
-
-.stat-value {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--primary);
-}
-
-.stat-sub {
-  font-size: 0.6rem;
-  opacity: 0.5;
-}
-
-/* --- Recipe Cards --- */
-.day-header {
-  margin: 2rem 1rem 1rem;
-  font-size: 1.4rem;
-  letter-spacing: -1px;
-}
-
-.recipe-grid {
+.card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
-  padding: 0 1rem;
 }
 
 .recipe-card {
   overflow: hidden;
   height: 100%;
-  display: flex;
-  flex-direction: column;
   cursor: pointer;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: 0.3s var(--ease);
 }
 
-.recipe-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+.recipe-card:active {
+  transform: scale(0.97);
 }
 
-.recipe-image {
-  height: 160px;
+.card-media {
+  height: 180px;
   background-size: cover;
   background-position: center;
   position: relative;
 }
 
-.recipe-badge {
+.meal-tag {
   position: absolute;
   top: 12px;
   right: 12px;
   background: rgba(255, 255, 255, 0.95);
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 50px;
   font-size: 0.6rem;
   font-weight: 800;
@@ -265,156 +189,49 @@ body {
   color: var(--primary);
 }
 
-.chain-badge {
+.chain-tag {
   position: absolute;
   bottom: 12px;
   left: 12px;
   background: var(--secondary);
-  color: white;
-  padding: 4px 10px;
+  color: var(--white);
+  padding: 5px 12px;
   border-radius: 50px;
   font-size: 0.6rem;
   font-weight: 800;
 }
 
-.seasonal-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: var(--accent);
-  color: white;
-  padding: 4px 10px;
-  border-radius: 50px;
-  font-size: 0.6rem;
-  font-weight: 800;
-}
-
-.recipe-content {
+.card-body {
   padding: 1.25rem;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
 }
 
-.recipe-meta {
+.meta-row {
   display: flex;
   justify-content: space-between;
   font-size: 0.65rem;
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-weight: 700;
-  text-transform: uppercase;
   margin-bottom: 8px;
 }
 
-.price-tag {
+.cost-tag {
   color: var(--accent);
 }
 
-.recipe-footer {
-  margin-top: auto;
-  display: flex;
-  gap: 6px;
-  padding-top: 10px;
+.title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
 }
 
-.energy-tag {
-  background: #fee2e2;
-  color: #991b1b;
-  font-size: 0.55rem;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 50px;
-}
-
-.share-tag {
-  background: #dcfce7;
-  color: #166534;
-  font-size: 0.55rem;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 50px;
-}
-
-/* --- Shopping List (Mobile Optimized) --- */
-.view-header {
-  padding: 1rem;
-}
-
-.aisle-section {
-  margin-bottom: 1.5rem;
-}
-
-.aisle-section h4 {
-  padding: 0 1.25rem;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  color: #9ca3af;
-  margin-bottom: 8px;
-  letter-spacing: 1px;
-}
-
-.shop-item {
-  margin: 0 1rem 8px;
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  min-height: 60px;
-}
-
-.shop-item.checked {
-  opacity: 0.35;
-  background: #f9fafb;
-}
-
-.checkbox-hitarea {
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.checkbox {
-  width: 22px;
-  height: 22px;
-  border: 2px solid #d1d5db;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-}
-
-.checked .checkbox {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
-
-.check-icon {
-  font-size: 14px;
-  opacity: 0;
-}
-
-.checked .check-icon {
-  opacity: 1;
-}
-
-.item-name {
-  font-weight: 600;
-  font-size: 1rem;
-  flex-grow: 1;
-}
-
-/* --- Cook Focus Mode --- */
+/* --- Cook Mode (Precision UI) --- */
 .cook-view {
-  max-width: 800px;
+  max-width: 850px;
   margin: 0 auto;
 }
 
-.wakelock-pill {
+.pill-wake {
   background: var(--accent);
   color: white;
   padding: 4px 12px;
@@ -426,7 +243,7 @@ body {
 
 @keyframes pulse {
   0% {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   50% {
@@ -434,176 +251,155 @@ body {
   }
 
   100% {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 }
 
-.active-recipe.focus-mode {
-  border: none;
-  border-radius: 0;
+.step-item {
+  padding: 1.5rem;
+  border-left: 6px solid transparent;
+  margin-bottom: 0.8rem;
+  display: flex;
+  gap: 20px;
+  cursor: pointer;
 }
 
-@media (min-width: 769px) {
-  .active-recipe.focus-mode {
-    border-radius: var(--radius-lg);
-  }
+.step-item.active {
+  border-left-color: var(--accent);
+  background: #f0fdf4;
 }
 
-.focus-mode .step-text {
-  font-size: 1.2rem;
+.step-label {
+  font-size: 1.25rem;
   line-height: 1.6;
   font-weight: 500;
 }
 
-.step-card {
-  padding: 1.5rem;
-  margin-bottom: 12px;
-  display: flex;
-  gap: 20px;
-  transition: var(--transition);
-}
-
-.step-card.completed {
-  background: #f0fdf4;
-  border-left: 6px solid var(--accent);
-  opacity: 0.6;
-}
-
-.step-number {
-  width: 32px;
-  height: 32px;
+.num-circle {
+  width: 34px;
+  height: 34px;
   background: #f3f4f6;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 0.9rem;
 }
 
-.completed .step-number {
+.active .num-circle {
   background: var(--accent);
   color: white;
 }
 
-/* --- Navigation --- */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-top: 1px solid #e5e7eb;
+/* --- Shopping (Hit Targets 44px) --- */
+.shop-item {
+  padding: 0 1.25rem;
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  z-index: 1000;
-  padding-bottom: env(safe-area-inset-bottom);
+  gap: 15px;
+  min-height: 64px;
+  margin-bottom: 8px;
+  cursor: pointer;
 }
 
-.nav-item {
-  background: none;
-  border: none;
+.shop-item.done {
+  opacity: 0.3;
+  background: #f9f9f9;
+  text-decoration: line-through;
+}
+
+.target-hitbox {
+  width: 44px;
+  height: 44px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  color: #9ca3af;
-  font-weight: 700;
-  transition: var(--transition);
-  flex: 1;
-  padding: 10px 0;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.nav-item.active {
-  color: var(--primary);
+.check-ui {
+  font-size: 24px;
+  color: #d1d5db;
+  transition: 0.2s var(--ease);
 }
 
-.nav-item svg {
-  font-size: 1.5rem;
+.done .check-ui {
+  color: var(--accent);
+  transform: scale(1.1);
 }
 
-.nav-item span {
-  font-size: 0.65rem;
-}
-
-/* --- Authentication --- */
-.login-overlay {
+/* --- Auth & Settings --- */
+.login-screen {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--bg-light);
+  inset: 0;
+  background: var(--bg-lite);
   z-index: 5000;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.login-modal {
+.login-box {
   width: 90%;
-  max-width: 400px;
-  padding: 3.5rem 2rem;
+  max-width: 420px;
+  padding: 4rem 2rem;
   text-align: center;
-  border: none;
-  box-shadow: var(--shadow-lg);
 }
 
-/* --- Buttons --- */
-.btn {
-  padding: 0.8rem 1.75rem;
+.settings-panel {
+  padding: 1.5rem;
+}
+
+.btn-toggle {
+  width: 100%;
+  padding: 1rem;
   border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  background: white;
   font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-family: inherit;
+  transition: 0.2s;
 }
 
-.btn-primary {
+.btn-toggle.active {
+  border-color: var(--primary);
   background: var(--primary);
   color: white;
 }
 
-.btn-outline {
-  background: white;
-  border: 2px solid var(--primary);
-  color: var(--primary);
+.modern-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: #e5e7eb;
+  margin: 1.5rem 0;
 }
 
-.btn-ghost {
-  background: transparent;
-  color: #9ca3af;
-}
-
-.btn-round {
-  width: 44px;
-  height: 44px;
-  padding: 0;
+.modern-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
   border-radius: 50%;
-  flex-shrink: 0;
+  border: 4px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
 }
 
-@keyframes fadeIn {
+/* Animation */
+.animate-fade {
+  animation: slideUp 0.5s var(--ease) forwards;
+}
+
+@keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(24px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.animate-fade {
-  animation: fadeIn 0.4s ease-out forwards;
 }

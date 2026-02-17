@@ -1,67 +1,98 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { RECIPES, BUDGET_MODIFIERS, AISLES } from './data/recipes';
-import { FiCalendar, FiShoppingCart, FiMap, FiSettings, FiCheckCircle, FiShare2, FiZap, FiBox } from 'react-icons/fi';
+import { FiCalendar, FiShoppingCart, FiMap, FiSettings, FiCheckCircle, FiShare2, FiZap, FiBox, FiUser } from 'react-icons/fi';
 import './index.css';
+
+// --- CUSTOM HOOKS ---
+
+const useWakeLock = (isActive) => {
+    useEffect(() => {
+        let wakeLock = null;
+        if (isActive && 'wakeLock' in navigator) {
+            const requestWakeLock = async () => {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Wake Lock Activated');
+                } catch (err) { console.error(`${err.name}, ${err.message}`); }
+            };
+            requestWakeLock();
+        }
+        return () => {
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => { wakeLock = null; console.log('Wake Lock Released'); });
+            }
+        };
+    }, [isActive]);
+};
 
 // --- SUB-COMPONENTS ---
 
-const SettingsPanel = ({ adults, kids, setAdults, setKids, isVegetarian, setIsVegetarian, familyPoints, energySavingsScore, setUser, user, pantry, setPantry }) => (
-    <div className="glass-card dashboard-card animate-fade">
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
-            <FiSettings /> Configuration Hub
-        </h3>
+const BottomNav = ({ activeTab, setActiveTab }) => (
+    <nav className="bottom-nav mobile-only">
+        <button className={`nav-item ${activeTab === 'plan' ? 'active' : ''}`} onClick={() => setActiveTab('plan')}>
+            <FiCalendar /> <span>Plan</span>
+        </button>
+        <button className={`nav-item ${activeTab === 'shop' ? 'active' : ''}`} onClick={() => setActiveTab('shop')}>
+            <FiShoppingCart /> <span>Shop</span>
+        </button>
+        <button className={`nav-item ${activeTab === 'cook' ? 'active' : ''}`} onClick={() => setActiveTab('cook')}>
+            <FiMap /> <span>Cook</span>
+        </button>
+        <button className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
+            <FiSettings /> <span>Setup</span>
+        </button>
+    </nav>
+);
 
-        <div className="control-group">
+const SettingsPanel = ({ adults, kids, setAdults, setKids, isVegetarian, setIsVegetarian, familyPoints, energySavingsScore, setUser, user, pantry, setPantry }) => (
+    <div className="glass-card settings-panel animate-fade">
+        <h3 className="panel-title"><FiSettings /> Strategy Configuration</h3>
+
+        <div className="setting-group">
             <div className="label-row">
                 <span>👨‍👩‍👧‍👦 Family Population</span>
-                <span className="value-highlight">{adults + kids} People</span>
+                <span className="value-tag">{adults + kids} People</span>
             </div>
             <input type="range" min="1" max="6" value={adults + kids} onChange={(e) => {
                 const val = parseInt(e.target.value);
                 setAdults(Math.ceil(val / 2));
                 setKids(Math.floor(val / 2));
-            }} className="modern-range" />
+            }} className="modern-slider" />
         </div>
 
-        <button className={`btn ${isVegetarian ? 'btn-primary' : 'btn-outline'}`}
-            style={{ width: '100%', marginBottom: '1.5rem' }}
+        <button className={`btn-toggle ${isVegetarian ? 'active' : ''}`}
             onClick={() => setIsVegetarian(!isVegetarian)}>
             {isVegetarian ? '🌿 Plant-Based Strategy' : '🥩 Standard Strategy'}
         </button>
 
-        <div className="pantry-section" style={{ marginBottom: '1.5rem' }}>
-            <div className="label-row" style={{ marginBottom: '0.8rem' }}>
-                <span>📦 Pantry Stock Check</span>
-                <FiBox />
-            </div>
-            <div className="pantry-grid">
+        <div className="stock-section">
+            <h4 className="section-subtitle"><FiBox /> Pantry Stock (Pantry-First)</h4>
+            <div className="stock-chips">
                 {['Pasta', 'Rice', 'Oats', 'Honey', 'Canned Tomatoes'].map(item => (
                     <button key={item}
-                        className={`pantry-chip ${pantry[item] ? 'active' : ''}`}
+                        className={`chip ${pantry[item] ? 'checked' : ''}`}
                         onClick={() => setPantry(prev => ({ ...prev, [item]: !prev[item] }))}>
-                        {pantry[item] ? '✅' : '+'} {item}
+                        {pantry[item] && <FiCheckCircle />} {item}
                     </button>
                 ))}
             </div>
         </div>
 
-        <div className="stats-grid">
-            <div className="stat-card">
-                <div className="stat-label">Portion Efficiency</div>
-                <div className="stat-value">£{(familyPoints * 14).toFixed(0)}</div>
-                <div className="stat-sub">EST. Weekly Saving</div>
+        <div className="efficiency-stats">
+            <div className="efficiency-card">
+                <span className="label">PORTION SAVING</span>
+                <span className="value">£{(familyPoints * 14).toFixed(0)}</span>
+                <span className="sub">Per Week</span>
             </div>
-            <div className="stat-card">
-                <div className="stat-label">Eco Score</div>
-                <div className="stat-value">{energySavingsScore}%</div>
-                <div className="stat-sub">Air Fryer / Hob Mix</div>
+            <div className="efficiency-card">
+                <span className="label">ECO OPTIMIZATION</span>
+                <span className="value">{energySavingsScore}%</span>
+                <span className="sub">Energy Grade</span>
             </div>
         </div>
 
-        <button className="btn btn-ghost"
-            style={{ marginTop: '2.5rem', width: '100%', fontSize: '0.8rem', color: '#999' }}
-            onClick={() => setUser(null)}>
-            Disconnect Strategy ({user?.name || 'James'})
+        <button className="btn-logout" onClick={() => setUser(null)}>
+            <FiUser /> Logout Strategy ({user?.name || 'User'})
         </button>
     </div>
 );
@@ -70,11 +101,7 @@ const App = () => {
     // --- HELPERS ---
     const getStored = (key, fallback) => {
         const item = localStorage.getItem(key);
-        try {
-            return item ? JSON.parse(item) : fallback;
-        } catch {
-            return fallback;
-        }
+        try { return item ? JSON.parse(item) : fallback; } catch { return fallback; }
     };
 
     // --- STATE ---
@@ -82,32 +109,23 @@ const App = () => {
     const [adults, setAdults] = useState(() => getStored('sc-adults', 2));
     const [kids, setKids] = useState(() => getStored('sc-kids', 2));
     const [isVegetarian, setIsVegetarian] = useState(() => getStored('sc-veggie', false));
-    const [activeTab, setActiveTab] = useState('plan'); // 'plan' | 'shop' | 'cook' | 'settings'
+    const [activeTab, setActiveTab] = useState('plan');
     const [selectedRecipe, setSelectedRecipe] = useState(null);
     const [checkedItems, setCheckedItems] = useState(() => getStored('sc-checked', {}));
     const [pantry, setPantry] = useState(() => getStored('sc-pantry', {}));
 
     // --- PERSISTENCE ---
-    useEffect(() => { localStorage.setItem('sc-user', JSON.stringify(user)); }, [user]);
-    useEffect(() => { localStorage.setItem('sc-adults', JSON.stringify(adults)); }, [adults]);
-    useEffect(() => { localStorage.setItem('sc-kids', JSON.stringify(kids)); }, [kids]);
-    useEffect(() => { localStorage.setItem('sc-veggie', JSON.stringify(isVegetarian)); }, [isVegetarian]);
-    useEffect(() => { localStorage.setItem('sc-checked', JSON.stringify(checkedItems)); }, [checkedItems]);
-    useEffect(() => { localStorage.setItem('sc-pantry', JSON.stringify(pantry)); }, [pantry]);
-
-    // --- SCREEN WAKE LOCK ---
     useEffect(() => {
-        let wakeLock = null;
-        if (activeTab === 'cook' && 'wakeLock' in navigator) {
-            const requestWakeLock = async () => {
-                try {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                } catch (err) { console.error(err); }
-            };
-            requestWakeLock();
-        }
-        return () => { if (wakeLock) wakeLock.release(); };
-    }, [activeTab]);
+        localStorage.setItem('sc-user', JSON.stringify(user));
+        localStorage.setItem('sc-adults', JSON.stringify(adults));
+        localStorage.setItem('sc-kids', JSON.stringify(kids));
+        localStorage.setItem('sc-veggie', JSON.stringify(isVegetarian));
+        localStorage.setItem('sc-checked', JSON.stringify(checkedItems));
+        localStorage.setItem('sc-pantry', JSON.stringify(pantry));
+    }, [user, adults, kids, isVegetarian, checkedItems, pantry]);
+
+    // --- HOOKS ---
+    useWakeLock(activeTab === 'cook' && !!selectedRecipe);
 
     // --- LOGIC ---
     const familyPoints = useMemo(() => adults + (kids * 0.7), [adults, kids]);
@@ -179,7 +197,7 @@ const App = () => {
             return acc;
         }, {});
 
-        let text = `🛒 *Sous Chef List [Zero-Waste]*\n\n`;
+        let text = `🛒 *Sous Chef List [Strategy Week]*\n\n`;
         AISLES.forEach(aisle => {
             if (grouped[aisle]) {
                 text += `*${aisle.toUpperCase()}*\n`;
@@ -190,38 +208,37 @@ const App = () => {
             }
         });
 
-        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.open(url, '_blank');
+        window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
     };
 
-    // --- RENDERERS ---
+    // --- PAGE RENDERERS ---
 
     const renderPlan = () => (
-        <div className="animate-fade">
+        <div className="view-container animate-fade">
             {Object.entries(recipesByDay).map(([day, meals]) => (
-                <div key={day} className="day-section">
-                    <h2 className="day-header">📅 {day}</h2>
-                    <div className="recipe-grid">
+                <div key={day} className="day-block">
+                    <h2 className="section-title">📅 {day}</h2>
+                    <div className="card-grid">
                         {['breakfast', 'lunch', 'dinner'].map(type => {
                             const recipe = meals[type];
                             if (!recipe) return null;
                             return (
-                                <div key={recipe.id} className="glass-card recipe-card"
+                                <div key={recipe.id} className="recipe-card glass-card"
                                     onClick={() => { setSelectedRecipe(recipe); setActiveTab('cook'); window.scrollTo(0, 0); }}>
-                                    <div className="recipe-image" style={{ backgroundImage: `url(${recipe.image})` }}>
-                                        <div className="recipe-badge">{type}</div>
-                                        {recipe.chainId && <div className="chain-badge">🔗 Chain {recipe.stepInChain}</div>}
-                                        {recipe.isSeasonal && <div className="seasonal-badge">🌱 Seasonal Best</div>}
+                                    <div className="card-media" style={{ backgroundImage: `url(${recipe.image})` }}>
+                                        <span className="meal-tag">{type}</span>
+                                        {recipe.chainId && <span className="chain-tag">🔗 Chain {recipe.stepInChain}</span>}
+                                        {recipe.isSeasonal && <span className="season-tag">🌱 Seasonal</span>}
                                     </div>
-                                    <div className="recipe-content">
-                                        <div className="recipe-meta">
+                                    <div className="card-body">
+                                        <div className="meta-row">
                                             <span>{recipe.prepTime} • {recipe.calories}</span>
-                                            <span className="price-tag">£{recipe.estCost} total</span>
+                                            <span className="cost-tag">£{recipe.estCost}</span>
                                         </div>
-                                        <h4>{recipe.displayTitle}</h4>
-                                        <div className="recipe-footer">
-                                            {recipe.energyUsage === 'air_fryer' && <span className="energy-tag">⚡ Air Fryer</span>}
-                                            {recipe.shareFactor > 0 && <span className="share-tag">♻️ Reused</span>}
+                                        <h4 className="title">{recipe.displayTitle}</h4>
+                                        <div className="tag-row">
+                                            {recipe.energyUsage === 'air_fryer' && <FiZap className="energy-icon" />}
+                                            {recipe.shareFactor > 0 && <span className="shared-badge">♻️ Reused</span>}
                                         </div>
                                     </div>
                                 </div>
@@ -241,157 +258,128 @@ const App = () => {
         }, {});
 
         return (
-            <div className="animate-fade">
-                <div className="view-header mobile-padding">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                            <h2>🛒 Smart Shopping List</h2>
-                            <p>Sorted by supermarket aisle flow.</p>
-                        </div>
-                        <button className="btn btn-primary btn-round" onClick={shareToWhatsApp}>
-                            <FiShare2 /> WhatsApp
-                        </button>
+            <div className="view-container animate-fade">
+                <div className="view-header">
+                    <div className="title-block">
+                        <h2>🛒 Smart Strategy List</h2>
+                        <p>Aggregated by Tesco/Sainsbury's aisle flow.</p>
                     </div>
+                    <button className="btn-share" onClick={shareToWhatsApp}><FiShare2 /> Export</button>
                 </div>
-                <div className="aisle-container">
+                <div className="list-content">
                     {AISLES.filter(a => grouped[a]).map(aisle => (
-                        <div key={aisle} className="aisle-section">
-                            <h4>{aisle}</h4>
+                        <div key={aisle} className="aisle-lane">
+                            <h4 className="aisle-title">{aisle}</h4>
                             {grouped[aisle].map(item => (
-                                <div key={item.name} className={`glass-card shop-item ${checkedItems[item.name] ? 'checked' : ''}`} onClick={() => toggleChecked(item.name)}>
-                                    <div className="checkbox-hitarea">
-                                        <div className="checkbox"><FiCheckCircle className="check-icon" /></div>
-                                    </div>
-                                    <span className="item-name">{item.totalQty.toFixed(1)}{item.unit} {item.name}</span>
-                                    {item.usedIn.length > 1 && <span className="recycle-icon">♻️</span>}
+                                <div key={item.name} className={`shop-item glass-card ${checkedItems[item.name] ? 'done' : ''}`}
+                                    onClick={() => toggleChecked(item.name)}>
+                                    <div className="target-hitbox"><FiCheckCircle className="check-ui" /></div>
+                                    <span className="name">{item.totalQty.toFixed(1)}{item.unit} {item.name}</span>
+                                    {item.usedIn.length > 1 && <span className="reuse-ui">♻️</span>}
                                 </div>
                             ))}
                         </div>
                     ))}
                 </div>
-                {shoppingList.length === 0 && (
-                    <div className="empty-state">
-                        <FiCheckCircle size={48} color="var(--accent)" />
-                        <p>Strategy fully stocked! No shopping required.</p>
-                    </div>
-                )}
             </div>
         );
     };
 
     const renderCook = () => {
         if (!selectedRecipe) return (
-            <div className="flex-center cook-empty">
-                <FiZap size={64} color="#ddd" />
-                <p>Select a goal in Planner to activate Cook Focus Mode.</p>
-                <button className="btn btn-primary" onClick={() => setActiveTab('plan')}>Open Planner</button>
+            <div className="empty-state animate-fade">
+                <FiMap size={48} />
+                <p>Activate Chef Focus Mode by selecting a meal from your plan.</p>
+                <button className="btn-primary" onClick={() => setActiveTab('plan')}>Open Planner</button>
             </div>
         );
 
         return (
-            <div className="animate-fade cook-view">
-                <div className="cook-header-actions mobile-only">
+            <div className="cook-view animate-fade">
+                <div className="cook-controls mobile-only">
                     <button className="btn-back" onClick={() => setActiveTab('plan')}>← Back</button>
-                    <div className="wakelock-pill">⚡ WAKE LOCK ACTIVE</div>
+                    <div className="pill-wake">⚡ WAKE LOCK ACTIVE</div>
                 </div>
-                <div className="glass-card active-recipe focus-mode">
-                    <div className="recipe-header-main" style={{ backgroundImage: `url(${selectedRecipe.image})` }}>
-                        <div className="header-overlay">
+                <div className="focus-card glass-card">
+                    <div className="cook-hero" style={{ backgroundImage: `url(${selectedRecipe.image})` }}>
+                        <div className="hero-data">
                             <h1>{selectedRecipe.displayTitle}</h1>
-                            <p>{selectedRecipe.day} • {selectedRecipe.theme}</p>
+                            <p>{selectedRecipe.day} Protocol</p>
                         </div>
                     </div>
 
-                    <div className="recipe-info-row">
-                        <div className="info-box kids">
-                            <strong>👶 Kid Hack:</strong> {selectedRecipe.kidHack}
+                    <div className="feature-row">
+                        <div className="feature-box kid">
+                            <strong>👶 Kid Hack</strong> {selectedRecipe.kidHack}
                         </div>
                         {selectedRecipe.adultUpgrade && (
-                            <div className="info-box adults">
-                                <strong>🍷 Adult Upgrade:</strong> {selectedRecipe.adultUpgrade}
+                            <div className="feature-box adult">
+                                <strong>🍷 Adult Upgrade</strong> {selectedRecipe.adultUpgrade}
                             </div>
                         )}
                     </div>
 
-                    <div className="steps-section">
+                    <div className="method-section">
                         <h3>Methodology</h3>
                         {selectedRecipe.steps.map((step, idx) => (
                             <div key={idx}
-                                className={`glass-card step-card ${checkedItems[`step-${selectedRecipe.id}-${idx}`] ? 'completed' : ''}`}
+                                className={`step-item glass-card ${checkedItems[`step-${selectedRecipe.id}-${idx}`] ? 'active' : ''}`}
                                 onClick={() => toggleChecked(`step-${selectedRecipe.id}-${idx}`)}>
-                                <div className="step-check">
-                                    <div className="step-number">{idx + 1}</div>
+                                <div className="step-ui">
+                                    <div className="num-circle">{idx + 1}</div>
                                 </div>
-                                <p className="step-text">{step}</p>
+                                <p className="step-label">{step}</p>
                             </div>
                         ))}
                     </div>
-                    <div className="mobile-padding" style={{ paddingBottom: '2rem' }}>
-                        <button className="btn btn-outline" style={{ width: '100%' }} onClick={() => setSelectedRecipe(null)}>Finish Meal</button>
+                    <div className="footer-action">
+                        <button className="btn-outline" style={{ width: '100%', padding: '1.2rem' }} onClick={() => setSelectedRecipe(null)}>Finish Goal</button>
                     </div>
                 </div>
             </div>
         );
     };
 
-    const renderLogin = () => (
-        <div className="login-overlay animate-fade">
-            <div className="glass-card login-modal">
-                <div style={{ fontSize: '4rem', marginBottom: '1.5rem' }}>🥘</div>
-                <h2>Sous Chef UK</h2>
-                <p>Zero-Waste Family Logistics</p>
-                <button className="btn btn-primary" style={{ width: '100%', padding: '1rem', borderRadius: '50px' }} onClick={() => setUser({ name: 'James' })}>
-                    Authenticate for Strategy
-                </button>
-            </div>
-        </div>
-    );
-
     return (
-        <div className="app-container">
-            {!user && renderLogin()}
-            <header className="app-header desktop-only">
-                <div className="header-content">
-                    <h1>Sous Chef <span className="accent-text">UK</span></h1>
-                    <div className="header-stats">
-                        <span>🛡️ PWA Enabled</span>
-                        <span>🌿 {energySavingsScore}% Energy Efficient</span>
+        <div className="app-root">
+            {!user && (
+                <div className="login-screen">
+                    <div className="login-box glass-card">
+                        <span className="logo-emoji">🥘</span>
+                        <h2>Sous Chef <span className="accent">UK</span></h2>
+                        <p>Zero-Waste Family Supply Chain</p>
+                        <button className="btn-primary" onClick={() => setUser({ name: 'James' })}>
+                            Link Strategy
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            <header className="desktop-header desktop-only">
+                <div className="header-inner">
+                    <h1>Sous Chef <span className="accent">UK</span></h1>
+                    <div className="header-meta">
+                        <span>PWA V2.0</span>
+                        <span>{energySavingsScore}% SAVING</span>
                     </div>
                 </div>
             </header>
 
-            <div className="main-layout">
-                <aside className="desktop-aside">
-                    {user && <SettingsPanel
-                        {...{ adults, kids, setAdults, setKids, isVegetarian, setIsVegetarian, familyPoints, energySavingsScore, setUser, user, pantry, setPantry }}
-                    />}
+            <div className="layout-engine">
+                <aside className="sidebar desktop-only">
+                    {user && <SettingsPanel {...{ adults, kids, setAdults, setKids, isVegetarian, setIsVegetarian, familyPoints, energySavingsScore, setUser, user, pantry, setPantry }} />}
                 </aside>
-                <main className="content-area">
+                <main className="viewer">
                     {activeTab === 'plan' && renderPlan()}
                     {activeTab === 'shop' && renderShop()}
                     {activeTab === 'cook' && renderCook()}
                     {activeTab === 'settings' && <div className="mobile-only">
-                        <SettingsPanel
-                            {...{ adults, kids, setAdults, setKids, isVegetarian, setIsVegetarian, familyPoints, energySavingsScore, setUser, user, pantry, setPantry }}
-                        />
+                        <SettingsPanel {...{ adults, kids, setAdults, setKids, isVegetarian, setIsVegetarian, familyPoints, energySavingsScore, setUser, user, pantry, setPantry }} />
                     </div>}
                 </main>
             </div>
 
-            <nav className="bottom-nav mobile-only">
-                <button className={`nav-item ${activeTab === 'plan' ? 'active' : ''}`} onClick={() => setActiveTab('plan')}>
-                    <FiCalendar /> <span>Plan</span>
-                </button>
-                <button className={`nav-item ${activeTab === 'shop' ? 'active' : ''}`} onClick={() => setActiveTab('shop')}>
-                    <FiShoppingCart /> <span>Shop</span>
-                </button>
-                <button className={`nav-item ${activeTab === 'cook' ? 'active' : ''}`} onClick={() => setActiveTab('cook')}>
-                    <FiMap /> <span>Cook</span>
-                </button>
-                <button className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>
-                    <FiSettings /> <span>Setup</span>
-                </button>
-            </nav>
+            <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
     );
 };
