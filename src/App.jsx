@@ -41,11 +41,12 @@ const App = () => {
     const [adults, setAdults] = useState(() => Number(localStorage.getItem('sc-adult-count')) || 2);
     const [kids, setKids] = useState(() => Number(localStorage.getItem('sc-kid-count')) || 2);
     const [activeTab, setActiveTab] = useState('plan');
-    const [viewMode, setViewMode] = useState('calendar'); // 'calendar' or 'list'
+    const [viewMode, setViewMode] = useState(() => localStorage.getItem('sc-view-mode') || 'calendar'); // 'calendar' or 'list'
     const [selectedRecipe, setSelectedRecipe] = useState(() => JSON.parse(localStorage.getItem('sc-active-recipe')) || null);
     const [activeWeek, setActiveWeek] = useState(1);
     const [checkedItems, setCheckedItems] = useState(() => JSON.parse(localStorage.getItem('sc-checked')) || {});
     const [planSelection, setPlanSelection] = useState(() => JSON.parse(localStorage.getItem('sc-plan-selection')) || RECIPES.map(r => r.id));
+    const [showFAQ, setShowFAQ] = useState(false);
 
     // --- PERSISTENCE ---
     useEffect(() => {
@@ -55,7 +56,8 @@ const App = () => {
         localStorage.setItem('sc-checked', JSON.stringify(checkedItems));
         localStorage.setItem('sc-plan-selection', JSON.stringify(planSelection));
         localStorage.setItem('sc-active-recipe', JSON.stringify(selectedRecipe));
-    }, [user, adults, kids, checkedItems, planSelection, selectedRecipe]);
+        localStorage.setItem('sc-view-mode', viewMode);
+    }, [user, adults, kids, checkedItems, planSelection, selectedRecipe, viewMode]);
 
     // --- HOOKS ---
     useWakeLock(activeTab === 'cook' && !!selectedRecipe);
