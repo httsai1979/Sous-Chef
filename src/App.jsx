@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { RECIPES, ENERGY_RATES, SNACKS, LUNCHBOXES, AISLES } from './data/recipes';
+import { RECIPES, ENERGY_RATES, SNACKS, LUNCHBOXES, AISLES, FAQ } from './data/recipes';
 import {
     FiCalendar, FiShoppingCart, FiMap, FiSettings, FiCheck,
-    FiZap, FiAlertCircle, FiBox, FiDollarSign, FiSmile, FiShield, FiChevronRight
+    FiZap, FiAlertCircle, FiBox, FiDollarSign, FiSmile, FiShield,
+    FiChevronRight, FiShare2, FiHelpCircle, FiArrowRight
 } from 'react-icons/fi';
 import './index.css';
 
@@ -16,7 +17,7 @@ const useWakeLock = (isActive) => {
             };
             requestWakeLock();
         }
-        return () => { if (wakeLock) wakeLock.release(); };
+        return () => { if (wakeLock) if (wakeLock.release) wakeLock.release(); };
     }, [isActive]);
 };
 
@@ -41,8 +42,10 @@ const App = () => {
     const [kids, setKids] = useState(() => Number(localStorage.getItem('sc-kid-count')) || 2);
     const [activeTab, setActiveTab] = useState('plan');
     const [selectedRecipe, setSelectedRecipe] = useState(null);
+    const [activeWeek, setActiveWeek] = useState(1);
     const [checkedItems, setCheckedItems] = useState(() => JSON.parse(localStorage.getItem('sc-checked')) || {});
     const [isVegetarian, setIsVegetarian] = useState(() => localStorage.getItem('sc-veggie') === 'true');
+    const [showFAQ, setShowFAQ] = useState(false);
 
     // --- PERSISTENCE ---
     useEffect(() => {
@@ -62,7 +65,8 @@ const App = () => {
     const stats = useMemo(() => {
         let totalCost = 0;
         let totalEnergyKWh = 0;
-        RECIPES.forEach(r => {
+        const currentWeekRecipes = RECIPES.filter(r => r.week === activeWeek);
+        currentWeekRecipes.forEach(r => {
             totalCost += (r.costPerAdult * adults) + (r.costPerKid * kids);
             const rate = ENERGY_RATES[r.energyType] || 1;
             totalEnergyKWh += (rate * (r.cookingTime / 60));
@@ -70,63 +74,100 @@ const App = () => {
         return {
             cost: totalCost.toFixed(2),
             energyCost: (totalEnergyKWh * 0.29).toFixed(2),
-            savings: (totalCost * 0.35).toFixed(2) // Est. vs. Takeaway
+            savings: (totalCost * 0.35).toFixed(2)
         };
-    }, [adults, kids]);
+    }, [adults, kids, activeWeek]);
 
     const activeShoppingList = useMemo(() => {
         const list = {};
-        RECIPES.forEach(recipe => {
+        const currentWeekRecipes = RECIPES.filter(r => r.week === activeWeek);
+        currentWeekRecipes.forEach(recipe => {
             recipe.ingredients.forEach(ing => {
                 const key = `${ing.name}-${ing.unit}`;
                 if (!list[key]) list[key] = { ...ing, totalQty: 0 };
                 list[key].totalQty += parseFloat(ing.baseQty * familyPoints);
             });
         });
-        // Add Snacks to list
         if (SNACKS) {
             SNACKS.forEach(s => {
-                if (!list[s.name]) list[s.name] = { name: s.name, unit: 'pc', totalQty: kids + adults, aisle: s.aisle };
+                if (!list[s.name]) list[s.name] = { name: s.name, unit: 'pc', totalQty: (kids + adults), aisle: s.aisle };
             });
         }
         return Object.values(list).sort((a, b) => AISLES.indexOf(a.aisle) - AISLES.indexOf(b.aisle));
-    }, [familyPoints, adults, kids]);
+    }, [familyPoints, adults, kids, activeWeek]);
+
+    const shareList = () => {
+        const text = `🛒 *Sous Chef Week ${activeWeek} List*\n\n` +
+            activeShoppingList.map(i => `${i.totalQty.toFixed(1)}${i.unit} ${i.name} [${i.aisle}]`).join('\n');
+        const url = `whatsapp://send?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+    };
 
     // --- RENDERERS ---
 
     const renderPlan = () => (
         <div className="tab-content fade-in">
-            <div className="large-title"><h1>Strategy Hub</h1></div>
-
-            <div className="stat-grid">
-                <FinanceIndicator value={`£${stats.cost}`} label="Weekly Groceries" icon={FiShoppingCart} color="#007AFF" />
-                <FinanceIndicator value={`£${stats.energyCost}`} label="Est. Energy" icon={FiZap} color="#FFCC00" />
-                <FinanceIndicator value={`£${stats.savings}`} label="Estimated Saving" icon={FiShield} color="#34C759" />
+            <div className="large-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h1>Strategy Hub</h1>
+                <button onClick={() => setShowFAQ(true)} className="icon-btn-ios"><FiHelpCircle size={24} /></button>
             </div>
 
-            <div className="section-header">Weekly Meal Cycle</div>
-            {RECIPES.map(recipe => (
+            <div className="ios-week-picker">
+                {[1, 2, 3, 4].map(w => (
+                    <button key={w} className={activeWeek === w ? 'active' : ''} onClick={() => setActiveWeek(w)}>Week {w}</button>
+                ))}
+            </div>
+
+            <div className="stat-grid">
+                <FinanceIndicator value={`£${stats.cost}`} label="Week Groceries" icon={FiShoppingCart} color="#007AFF" />
+                <FinanceIndicator value={`£${stats.energyCost}`} label="Week Energy" icon={FiZap} color="#FFCC00" />
+                <FinanceIndicator value={`£${stats.savings}`} label="Week Saving" icon={FiShield} color="#34C759" />
+            </div>
+
+            <div className="section-header">Week {activeWeek} Meal Cycle</div>
+            {RECIPES.filter(r => r.week === activeWeek).map(recipe => (
                 <div key={recipe.id} className="recipe-card-ios" onClick={() => { setSelectedRecipe(recipe); setActiveTab('cook'); window.scrollTo(0, 0); }}>
                     <div className="recipe-image-ios" style={{ backgroundImage: `url(${recipe.image})` }}>
                         <div className="energy-pill">ECO {recipe.energyType.replace('_', ' ')}</div>
                     </div>
                     <div className="recipe-info-ios">
-                        <h3>{recipe.title}</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <h3>{recipe.day}: {recipe.title}</h3>
+                            <FiChevronRight color="#C7C7CC" />
+                        </div>
                         <p className="rationale">{recipe.rationale}</p>
                     </div>
                 </div>
             ))}
 
-            <div className="section-header">School Lunch Boxes</div>
+            <div className="section-header">Pantry/Lunchbox Integration</div>
             <div className="ios-list">
                 {LUNCHBOXES && LUNCHBOXES.map(lb => (
                     <div key={lb.id} className="ios-item">
                         <FiBox style={{ marginRight: '12px', color: '#007AFF' }} />
                         <div style={{ flex: 1 }}>
                             <div style={{ fontWeight: 600 }}>{lb.name}</div>
-                            <div style={{ fontSize: '12px', color: '#8E8E93' }}>Side: {lb.accessories}</div>
+                            <div style={{ fontSize: '12px', color: '#8E8E93' }}>Accessory: {lb.accessories}</div>
                         </div>
-                        <FiChevronRight color="#C7C7CC" />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    const renderShop = () => (
+        <div className="tab-content fade-in">
+            <div className="large-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h1>Grocery Run</h1>
+                <button onClick={shareList} className="icon-btn-ios"><FiShare2 size={24} color="#007AFF" /></button>
+            </div>
+            <div className="section-header">Week {activeWeek} Master List (Family of {adults + kids})</div>
+            <div className="ios-list">
+                {activeShoppingList.map(item => (
+                    <div key={item.name} className="ios-item" onClick={() => setCheckedItems({ ...checkedItems, [item.name]: !checkedItems[item.name] })}>
+                        <div className={`chk ${checkedItems[item.name] ? 'on' : ''}`}><FiCheck /></div>
+                        <span style={{ flex: 1, textDecoration: checkedItems[item.name] ? 'line-through' : 'none' }}>{item.totalQty.toFixed(1)} {item.unit} {item.name}</span>
+                        <div className="aisle-lbl">{item.aisle}</div>
                     </div>
                 ))}
             </div>
@@ -134,28 +175,28 @@ const App = () => {
     );
 
     const renderCook = () => {
-        if (!selectedRecipe) return <div className="tab-content center-msg"><FiMap size={48} /><p>Select a strategy from Plan</p></div>;
+        if (!selectedRecipe) return <div className="tab-content center-msg"><FiMap size={48} /><p>Pick a recipe from Planner</p><button className="btn-ios" style={{ width: '200px', marginTop: '20px' }} onClick={() => setActiveTab('plan')}>Go to Plan</button></div>;
         return (
             <div className="tab-content fade-in">
-                <button className="back-btn" onClick={() => setSelectedRecipe(null)}>Close Action</button>
+                <button className="back-btn" onClick={() => setSelectedRecipe(null)}><FiArrowRight style={{ transform: 'rotate(180deg)', marginRight: '8px' }} /> Return to Planner</button>
                 <div className="cook-header">
                     <h1>{selectedRecipe.title}</h1>
                     <div className="ios-alert">
                         <FiZap color="#FFCC00" />
-                        <span><strong>Energy Tip:</strong> Using the {selectedRecipe.energyType.replace('_', ' ')} saves ~20p vs. Oven.</span>
+                        <span><strong>Energy Strategy:</strong> cooking time {selectedRecipe.cookingTime} mins via {selectedRecipe.energyType.replace('_', ' ')}. Savings achieved.</span>
                     </div>
                 </div>
 
                 <div className="flavor-split">
                     <div className="flavor-card kit">
-                        <FiSmile />
+                        <FiSmile size={24} />
                         <div>
                             <strong>THE KID HACK (HECK)</strong>
                             <p>{selectedRecipe.kidHack}</p>
                         </div>
                     </div>
                     <div className="flavor-card adult">
-                        <FiZap />
+                        <FiZap size={24} />
                         <div>
                             <strong>ADULT UPGRADE</strong>
                             <p>{selectedRecipe.adultUpgrade}</p>
@@ -163,7 +204,7 @@ const App = () => {
                     </div>
                 </div>
 
-                <div className="section-header">Ingredients for {adults + kids} Persons</div>
+                <div className="section-header">Ingredients: {adults} Adults, {kids} Kids</div>
                 <div className="ios-list">
                     {selectedRecipe.ingredients.map(ing => (
                         <div key={ing.name} className="ios-item">
@@ -173,7 +214,7 @@ const App = () => {
                     ))}
                 </div>
 
-                <div className="section-header">Precision Execution</div>
+                <div className="section-header">Execution Protocol</div>
                 {selectedRecipe.steps.map((s, i) => (
                     <div key={i} className={`step-bubble ${checkedItems[`cook-${selectedRecipe.id}-${i}`] ? 'checked' : 'active'}`} onClick={() => setCheckedItems({ ...checkedItems, [`cook-${selectedRecipe.id}-${i}`]: !checkedItems[`cook-${selectedRecipe.id}-${i}`] })}>
                         <div className="step-num">{i + 1}</div>
@@ -186,12 +227,12 @@ const App = () => {
 
     const renderSettings = () => (
         <div className="tab-content fade-in">
-            <div className="large-title"><h1>Household Setup</h1></div>
+            <div className="large-title"><h1>User Profile</h1></div>
 
             <div className="section-header">Household Configuration</div>
             <div className="ios-list">
                 <div className="ios-item">
-                    <span style={{ flex: 1 }}>Adults</span>
+                    <span style={{ flex: 1, fontWeight: 500 }}>Adult Portions</span>
                     <div className="stepper">
                         <button onClick={() => setAdults(Math.max(1, adults - 1))}>-</button>
                         <span>{adults}</span>
@@ -199,7 +240,10 @@ const App = () => {
                     </div>
                 </div>
                 <div className="ios-item">
-                    <span style={{ flex: 1 }}>Kids (NHS Healthy Plan)</span>
+                    <div style={{ flex: 1 }}>
+                        <span style={{ fontWeight: 500 }}>Kid Portions</span>
+                        <div style={{ fontSize: '11px', color: var('--system-gray') }}>NHS Healthy Growth Calibrated</div>
+                    </div>
                     <div className="stepper">
                         <button onClick={() => setKids(Math.max(0, kids - 1))}>-</button>
                         <span>{kids}</span>
@@ -208,38 +252,56 @@ const App = () => {
                 </div>
             </div>
 
-            <div className="section-header">Supply Chain Efficiency</div>
+            <div className="section-header">Strategy Preferences</div>
             <div className="ios-list">
                 <div className="ios-item">
                     <div style={{ flex: 1 }}>
                         <div style={{ fontWeight: 600 }}>Zero Waste Protocol</div>
-                        <div style={{ fontSize: '12px', color: '#8E8E93' }}>Automatically use carcasses/scraps for broths</div>
+                        <div style={{ fontSize: '12px', color: '#8E8E93' }}>Enable stock/carcass recovery alerts</div>
                     </div>
-                    <div className="toggle active"></div>
+                    <div className="ios-toggle active"></div>
                 </div>
             </div>
 
-            <button className="ios-danger-btn" onClick={() => setUser(null)}>Reset Strategy</button>
+            <div className="section-header">Action</div>
+            <button className="ios-danger-btn" onClick={() => setUser(null)}>Deactivate Session</button>
+        </div>
+    );
+
+    const renderFAQ = () => (
+        <div className="faq-overlay fade-in">
+            <div className="faq-modal">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <h2>App Guidance</h2>
+                    <button onClick={() => setShowFAQ(false)} className="back-btn" style={{ padding: 0 }}>Close</button>
+                </div>
+                {FAQ.map((f, i) => (
+                    <div key={i} style={{ marginBottom: '20px' }}>
+                        <div style={{ fontWeight: 700, marginBottom: '6px', color: '#007AFF' }}>Q: {f.q}</div>
+                        <div style={{ fontSize: '14px', color: '#3C3C43' }}>{f.a}</div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 
     return (
         <div className="app-container">
-            {user ? (
+            {!user ? (
+                <div className="login-screen fade-in">
+                    <div className="login-box">
+                        <div className="logo">🥘</div>
+                        <h1>Sous Chef 2.0</h1>
+                        <p style={{ color: '#8E8E93', marginBottom: '30px' }}>Strategic Domestic Management</p>
+                        <button className="btn-ios" onClick={() => setUser({ name: 'James' })}>Authenticate Strategy</button>
+                    </div>
+                </div>
+            ) : (
                 <>
+                    {showFAQ && renderFAQ()}
                     <main>
                         {activeTab === 'plan' && renderPlan()}
-                        {activeTab === 'shop' && <div className="tab-content fade-in"><div className="large-title"><h1>Grocery Run</h1></div>
-                            <div className="ios-list">
-                                {activeShoppingList.map(item => (
-                                    <div key={item.name} className="ios-item" onClick={() => setCheckedItems({ ...checkedItems, [item.name]: !checkedItems[item.name] })}>
-                                        <div className={`chk ${checkedItems[item.name] ? 'on' : ''}`}><FiCheck /></div>
-                                        <span style={{ flex: 1, textDecoration: checkedItems[item.name] ? 'line-through' : 'none' }}>{item.totalQty.toFixed(1)} {item.unit} {item.name}</span>
-                                        <div className="aisle-lbl">{item.aisle}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>}
+                        {activeTab === 'shop' && renderShop()}
                         {activeTab === 'cook' && renderCook()}
                         {activeTab === 'settings' && renderSettings()}
                     </main>
@@ -250,15 +312,6 @@ const App = () => {
                         <div className={`tab-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}><FiSettings /><span>Setup</span></div>
                     </nav>
                 </>
-            ) : (
-                <div className="login-screen fade-in">
-                    <div className="login-box">
-                        <div className="logo">🥘</div>
-                        <h1>Sous Chef 2.0</h1>
-                        <p>Strategic Domestic Management</p>
-                        <button className="btn-ios" onClick={() => setUser({ name: 'James' })}>Activate Strategy</button>
-                    </div>
-                </div>
             )}
         </div>
     );
