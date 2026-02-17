@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { RECIPES, ENERGY_RATES, SNACKS, LUNCHBOXES, AISLES } from './data/recipes';
 import {
     FiCalendar, FiShoppingCart, FiMap, FiSettings, FiCheck,
-    FiZap, FiAlertCircle, FiBox, FiDollarSign, FiSmile, FiShield
+    FiZap, FiAlertCircle, FiBox, FiDollarSign, FiSmile, FiShield, FiChevronRight
 } from 'react-icons/fi';
 import './index.css';
 
@@ -84,9 +84,11 @@ const App = () => {
             });
         });
         // Add Snacks to list
-        SNACKS.forEach(s => {
-            if (!list[s.name]) list[s.name] = { name: s.name, unit: 'pc', totalQty: kids + adults, aisle: s.aisle };
-        });
+        if (SNACKS) {
+            SNACKS.forEach(s => {
+                if (!list[s.name]) list[s.name] = { name: s.name, unit: 'pc', totalQty: kids + adults, aisle: s.aisle };
+            });
+        }
         return Object.values(list).sort((a, b) => AISLES.indexOf(a.aisle) - AISLES.indexOf(b.aisle));
     }, [familyPoints, adults, kids]);
 
@@ -117,7 +119,7 @@ const App = () => {
 
             <div className="section-header">School Lunch Boxes</div>
             <div className="ios-list">
-                {LUNCHBOXES.map(lb => (
+                {LUNCHBOXES && LUNCHBOXES.map(lb => (
                     <div key={lb.id} className="ios-item">
                         <FiBox style={{ marginRight: '12px', color: '#007AFF' }} />
                         <div style={{ flex: 1 }}>
