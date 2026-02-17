@@ -25,6 +25,7 @@ body {
   background: var(--system-gray-6);
   color: var(--text-primary);
   line-height: 1.4;
+  overflow-x: hidden;
 }
 
 .app-container {
@@ -51,21 +52,116 @@ body {
   letter-spacing: -0.5px;
 }
 
-.section-header {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--system-gray);
-  text-transform: uppercase;
-  padding: 30px 0 10px;
-  letter-spacing: 0.5px;
+/* Calendar Grid */
+.calendar-grid-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 12px;
+  border: 1px solid #eee;
+  margin: 20px 0;
 }
 
-/* Dashboard */
+.calendar-header-row {
+  display: grid;
+  grid-template-columns: 30px repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.day-name {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--system-gray);
+  text-align: center;
+}
+
+.week-row {
+  display: grid;
+  grid-template-columns: 30px repeat(7, 1fr);
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.week-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--system-blue);
+  text-transform: uppercase;
+}
+
+.days-container {
+  display: contents;
+}
+
+.calendar-cell {
+  height: 48px;
+  border-radius: 8px;
+  background: #F2F2F7;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.calendar-cell.active {
+  background: #E1F0FF;
+  border-color: var(--system-blue);
+}
+
+.calendar-cell.current {
+  border-color: var(--system-green);
+}
+
+.cell-thumb {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+}
+
+.active .cell-thumb {
+  opacity: 0.8;
+}
+
+.cell-check {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--system-blue);
+  color: #fff;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.8);
+}
+
+.cell-empty {
+  width: 100%;
+  height: 100%;
+  background: #fafafa;
+}
+
+.hint-text {
+  font-size: 11px;
+  color: var(--system-gray);
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* Existing Components Re-styled */
 .stat-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin-bottom: 24px;
+  margin: 20px 0;
 }
 
 .finance-card {
@@ -90,32 +186,27 @@ body {
 .fin-val {
   font-size: 18px;
   font-weight: 700;
-  color: #000;
 }
 
 .fin-label {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--system-gray);
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
-/* Recipe Cards & Selection */
 .recipe-card-ios {
   background: #fff;
   border-radius: var(--radius-card);
   border: 2px solid #efefef;
   overflow: hidden;
   margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  cursor: pointer;
   transition: 0.2s;
-  position: relative;
 }
 
 .recipe-card-ios.deselected {
-  opacity: 0.5;
-  border-color: transparent;
-  filter: grayscale(0.5);
+  opacity: 0.4;
+  filter: grayscale(1);
 }
 
 .recipe-image-ios {
@@ -123,43 +214,6 @@ body {
   background-size: cover;
   background-position: center;
   position: relative;
-}
-
-.card-overlay-hint {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  opacity: 0;
-  transition: 0.2s;
-}
-
-.recipe-card-ios:hover .card-overlay-hint {
-  opacity: 1;
-}
-
-.ios-checkbox {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 2px solid #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: transparent;
-  transition: 0.2s;
-  background: #fff;
-}
-
-.ios-checkbox.checked {
-  background: var(--system-blue);
-  border-color: var(--system-blue);
-  color: #fff;
 }
 
 .energy-pill {
@@ -172,14 +226,63 @@ body {
   font-weight: 800;
   padding: 4px 10px;
   border-radius: 20px;
-  text-transform: uppercase;
 }
 
 .recipe-info-ios {
   padding: 16px;
 }
 
-/* Navigation */
+.rationale {
+  font-size: 12px;
+  color: var(--system-gray);
+  margin-top: 4px;
+}
+
+.ios-checkbox {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  background: #fff;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.ios-checkbox.checked {
+  background: var(--system-blue);
+  border-color: var(--system-blue);
+  color: #fff;
+}
+
+.ios-list {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #eee;
+  overflow: hidden;
+}
+
+.ios-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f2f2f7;
+  cursor: pointer;
+}
+
+.ios-item:active {
+  background: #f9f9f9;
+}
+
+.mini-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-size: cover;
+}
+
 .tab-bar {
   position: fixed;
   bottom: 0;
@@ -225,50 +328,6 @@ body {
   font-size: 24px;
 }
 
-/* Modals & Lists */
-.faq-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(5px);
-  z-index: 2000;
-  display: flex;
-  align-items: flex-end;
-}
-
-.faq-modal {
-  background: #fff;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  border-radius: 24px 24px 0 0;
-  padding: 30px;
-  max-height: 85vh;
-  overflow-y: auto;
-}
-
-.ios-list {
-  background: #fff;
-  border-radius: 16px;
-  border: 1px solid #eee;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.ios-item {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #f2f2f7;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.ios-item:active {
-  background: #f9f9f9;
-}
-
-/* Utils */
 .btn-ios {
   background: var(--system-blue);
   color: #fff;
@@ -310,7 +369,6 @@ body {
   color: var(--system-blue);
   font-size: 20px;
   font-weight: 600;
-  cursor: pointer;
 }
 
 .chk {
@@ -329,6 +387,28 @@ body {
   background: var(--system-blue);
   border-color: var(--system-blue);
   color: #fff;
+}
+
+.faq-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.faq-modal {
+  background: #fff;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: 24px 24px 0 0;
+  padding: 30px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
 }
 
 .fade-in {
@@ -361,12 +441,11 @@ body {
 .icon-btn-ios {
   background: #f2f2f7;
   border: none;
-  padding: 8px;
+  padding: 10px;
   cursor: pointer;
   border-radius: 50%;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .back-btn {
