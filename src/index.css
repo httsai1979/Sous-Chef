@@ -12,17 +12,14 @@
   --system-gray-5: #E5E5EA;
   --system-gray-6: #F2F2F7;
 
-  --primary: #1b4332;
-  --secondary: #d4a373;
-  --accent: var(--system-green);
   --bg-color: #FFFFFF;
   --card-bg: #FFFFFF;
   --text-primary: #000000;
   --text-secondary: #3C3C43;
   --text-tertiary: rgba(60, 60, 67, 0.6);
 
-  --radius-ios: 10px;
-  --radius-card: 20px;
+  --radius-ios: 12px;
+  --radius-card: 22px;
   --safe-area-bottom: env(safe-area-inset-bottom);
 }
 
@@ -56,32 +53,24 @@ body {
 /* --- iOS Typography --- */
 h1 {
   font-size: 34px;
-  font-weight: 700;
-  letter-spacing: -1px;
-  margin-bottom: 8px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 h2 {
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 12px;
-}
-
-h3 {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text-secondary);
 }
 
 .large-title {
-  padding: 40px 16px 10px;
+  padding: 40px 20px 10px;
   background: var(--bg-color);
 }
 
 .section-header {
-  padding: 8px 16px;
+  padding: 25px 20px 8px;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 600;
   color: var(--system-gray);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -98,13 +87,40 @@ h3 {
 
 @media (min-width: 769px) {
   .app-container {
-    max-width: 1000px;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
   }
 }
 
 .tab-content {
-  padding: 0 16px 120px;
+  padding: 0 16px 140px;
+}
+
+/* --- Week Picker --- */
+.ios-week-picker {
+  display: flex;
+  background: var(--system-gray-6);
+  padding: 4px;
+  border-radius: 10px;
+  margin: 10px 16px 20px;
+}
+
+.ios-week-picker button {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  transition: 0.2s;
+}
+
+.ios-week-picker button.active {
+  background: var(--white, #fff);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
 }
 
 /* --- Apple Style Cards --- */
@@ -119,38 +135,40 @@ h3 {
 .ios-item {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--system-gray-5);
   cursor: pointer;
   transition: background 0.2s;
-}
-
-.ios-item:last-child {
-  border-bottom: none;
 }
 
 .ios-item:active {
   background-color: var(--system-gray-5);
 }
 
+.ios-item:last-child {
+  border-bottom: none;
+}
+
 .recipe-card-ios {
   background: var(--card-bg);
   border-radius: var(--radius-card);
   overflow: hidden;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--system-gray-5);
+  position: relative;
 }
 
 .recipe-image-ios {
   width: 100%;
-  height: 200px;
+  height: 180px;
   background-size: cover;
   background-position: center;
+  position: relative;
 }
 
 .recipe-info-ios {
-  padding: 16px;
+  padding: 18px;
 }
 
 /* --- Navigation Bar --- */
@@ -160,19 +178,19 @@ h3 {
   left: 0;
   right: 0;
   height: 84px;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: saturate(180%) blur(20px);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(25px);
   display: flex;
   justify-content: space-around;
   padding-bottom: var(--safe-area-bottom);
-  border-top: 0.5px solid rgba(0, 0, 0, 0.2);
+  border-top: 0.5px solid rgba(0, 0, 0, 0.15);
   z-index: 1000;
   margin: 0 auto;
 }
 
 @media (min-width: 769px) {
   .tab-bar {
-    max-width: 1000px;
+    max-width: 600px;
   }
 }
 
@@ -184,7 +202,7 @@ h3 {
   flex: 1;
   color: var(--system-gray);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
   gap: 4px;
   text-decoration: none;
   background: none;
@@ -199,30 +217,102 @@ h3 {
   font-size: 24px;
 }
 
-/* --- Buttons --- */
+/* --- Controls & Badges --- */
+.ios-stepper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--system-gray-6);
+  color: var(--system-blue);
+  font-size: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ios-stepper:active {
+  background: var(--system-gray-5);
+}
+
+.ios-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #FFF2F2;
+  border: 1px solid #FFE5E5;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #D32F2F;
+}
+
 .btn-ios {
   background: var(--system-blue);
   color: white;
   border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  width: 100%;
+}
+
+.ios-danger-btn {
+  background: none;
+  border: none;
+  color: var(--system-red);
   font-size: 17px;
   font-weight: 600;
   width: 100%;
-  cursor: pointer;
-  transition: opacity 0.2s;
+  padding: 20px;
 }
 
-.btn-ios:active {
-  opacity: 0.7;
+/* --- Cook View Steps --- */
+.step-bubble {
+  padding: 20px;
+  margin-bottom: 12px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  border: 1px solid var(--system-gray-5);
+  transition: transform 0.2s;
 }
 
-/* --- Shopping List --- */
-.checkbox-ios {
-  width: 24px;
-  height: 24px;
+.step-bubble:active {
+  transform: scale(0.98);
+}
+
+.step-bubble.active {
+  border-color: var(--system-blue);
+  background: rgba(0, 122, 255, 0.02);
+}
+
+.step-bubble.checked {
+  opacity: 0.4;
+}
+
+.step-number-ios {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  border: 2px solid var(--system-gray-4);
+  background: var(--system-blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.checkbox-ios {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--system-gray-4);
   margin-right: 12px;
   display: flex;
   align-items: center;
@@ -232,54 +322,28 @@ h3 {
 .checked .checkbox-ios {
   background: var(--system-blue);
   border-color: var(--system-blue);
-}
-
-.checked .checkbox-ios svg {
   color: white;
-}
-
-/* --- Cook View --- */
-.prep-list {
-  background: var(--system-gray-6);
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-}
-
-.step-bubble {
-  padding: 16px;
-  margin-bottom: 12px;
-  background: var(--card-bg);
-  border-radius: 16px;
-  border: 1px solid var(--system-gray-5);
-}
-
-.step-bubble.active {
-  border-color: var(--system-blue);
-  background: rgba(0, 122, 255, 0.05);
 }
 
 .wakelock-pill-ios {
-  position: absolute;
-  top: 10px;
-  right: 16px;
   background: var(--system-green);
   color: white;
+  font-size: 10px;
+  font-weight: 800;
   padding: 4px 10px;
   border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-/* --- Animation --- */
+/* Animation */
 .fade-in {
-  animation: iosFade 0.3s ease-out;
+  animation: iosFade 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes iosFade {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
 
   to {

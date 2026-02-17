@@ -1,330 +1,3 @@
-export const RECIPES = [
-    // --- SUNDAY: START OF CHAIN A (ROAST) ---
-    {
-        id: 'sun-bfast',
-        day: 'Sunday',
-        mealType: 'breakfast',
-        theme: 'Slow Morning',
-        title: 'Lemon & Honey Yogurt',
-        titleVeg: 'Lemon & Honey Yogurt',
-        energyUsage: 'none',
-        energyEfficiency: { method: 'none', saving: '100%', note: 'Zero fuel cost' },
-        prepTime: '5 min',
-        calories: '200 kcal',
-        freshness: 2,
-        costPerPortion: 1.2,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1522906456132-bf22adbc7079?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Greek Yogurt', baseQty: 150, unit: 'g', aisle: 'Dairy' },
-            { name: 'Lemon', baseQty: 0.25, unit: 'pc', aisle: 'Produce' },
-            { name: 'Honey', baseQty: 1, unit: 'tbsp', aisle: 'Pantry' }
-        ],
-        kidHack: "It's 'Lemon Cloud Dessert' for breakfast!",
-        adultUpgrade: "Add fresh zest and a sprig of dill for a sophisticated tang.",
-        hiddenVeg: "High protein yogurt base supporting growth.",
-        steps: ["Mix lemon juice and honey into yogurt."]
-    },
-    {
-        id: 'sun-lunch',
-        day: 'Sunday',
-        mealType: 'lunch',
-        theme: 'Easy Assembly',
-        title: 'Sunday Salad Wraps',
-        titleVeg: 'Sunday Salad Wraps',
-        energyUsage: 'none',
-        energyEfficiency: { method: 'none', saving: '100%', note: 'Zero fuel cost' },
-        prepTime: '10 min',
-        calories: '450 kcal',
-        freshness: 2,
-        costPerPortion: 0.8,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1509722747041-619f3830c149?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Taco Shells', baseQty: 2, unit: 'pc', aisle: 'Bakery' },
-            { name: 'Shredded Lettuce', baseQty: 50, unit: 'g', aisle: 'Produce' }
-        ],
-        kidHack: "Let them roll their own 'Food Sleeping Bags'.",
-        adultUpgrade: "Add pickled jalapeños and soured cream for a kick.",
-        hiddenVeg: "High fiber wraps and raw crunchy veg.",
-        steps: ["Assemble wraps with lettuce and surplus yogurt sauce."]
-    },
-    {
-        id: 'sun-dinner',
-        day: 'Sunday',
-        mealType: 'dinner',
-        theme: 'The Ritual Roast',
-        title: 'Herb-Roasted Whole Chicken',
-        titleVeg: 'Mushroom & Nut Roast',
-        chainId: 'chain-a',
-        stepInChain: 1,
-        energyUsage: 'air_fryer',
-        energyEfficiency: { method: 'air_fryer', saving: '58%', note: 'Air Fryer saves ~35 mins vs Oven' },
-        prepTime: '60 min',
-        calories: '750 kcal',
-        freshness: 2,
-        costPerPortion: 2.5,
-        seasonalMonths: [9, 10, 11, 12, 1, 2],
-        image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Whole Chicken', nameVeg: 'Large Mushrooms', baseQty: 0.25, unit: 'pc', aisle: 'Meat & Fish' },
-            { name: 'Potatoes', baseQty: 200, unit: 'g', aisle: 'Produce' },
-            { name: 'Carrots', baseQty: 100, unit: 'g', aisle: 'Produce' },
-            { name: 'Fresh Rosemary', baseQty: 5, unit: 'g', aisle: 'Produce' }
-        ],
-        kidHack: "Save the 'wishbone' for a special game.",
-        adultUpgrade: "Top with a reduction of the roasting juices and fresh rosemary.",
-        hiddenVeg: "Root vegetables roasted in natural juices.",
-        steps: ["Pat chicken dry and season.", "Roast at 180°C in Air Fryer for 53 mins.", "Rest for 10 mins."]
-    },
-
-    // --- MONDAY: CHAIN A PART 2 ---
-    {
-        id: 'mon-bfast',
-        day: 'Monday',
-        mealType: 'breakfast',
-        theme: 'Quick Start',
-        title: 'Greek Yogurt & Honey',
-        titleVeg: 'Greek Yogurt & Honey',
-        energyUsage: 'none',
-        energyEfficiency: { method: 'none', saving: '100%', note: 'No energy needed' },
-        prepTime: '5 min',
-        calories: '250 kcal',
-        freshness: 1,
-        costPerPortion: 1.0,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Greek Yogurt', baseQty: 150, unit: 'g', aisle: 'Dairy' },
-            { name: 'Honey', baseQty: 1, unit: 'tbsp', aisle: 'Pantry' }
-        ],
-        kidHack: "Call it 'Cloud Soup'.",
-        adultUpgrade: "Stir in a drop of vanilla or sprinkle of cinnamon.",
-        hiddenVeg: "Probiotic support for early week gut health.",
-        steps: ["Scoop yogurt into bowl.", "Drizzle with honey."]
-    },
-    {
-        id: 'mon-lunch',
-        day: 'Monday',
-        mealType: 'lunch',
-        theme: 'Zero Prep',
-        title: 'Chicken & Lettuce Salad',
-        titleVeg: 'Tofu & Lettuce Salad',
-        chainId: 'chain-a',
-        stepInChain: 2,
-        energyUsage: 'none',
-        energyEfficiency: { method: 'none', saving: '100%', note: 'Uses pre-cooked chicken' },
-        prepTime: '5 min',
-        calories: '350 kcal',
-        freshness: 1,
-        costPerPortion: 1.2,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Whole Chicken', nameVeg: 'Firm Tofu', baseQty: 0.1, unit: 'pc', aisle: 'Meat & Fish' },
-            { name: 'Shredded Lettuce', baseQty: 50, unit: 'g', aisle: 'Produce' },
-            { name: 'Lemon', baseQty: 0.25, unit: 'pc', aisle: 'Produce' }
-        ],
-        kidHack: "Use 'Sword' toothpicks.",
-        adultUpgrade: "Add extra lemon zest and black pepper.",
-        hiddenVeg: "Fresh leafy greens.",
-        steps: ["Use leftover roasted chicken.", "Toss with lettuce and lemon."]
-    },
-    {
-        id: 'mon-dinner',
-        day: 'Monday',
-        mealType: 'dinner',
-        theme: 'Transformation',
-        title: 'Chicken Tomato Pasta',
-        titleVeg: 'Tofu Tomato Pasta',
-        chainId: 'chain-a',
-        stepInChain: 3,
-        energyUsage: 'hob',
-        energyEfficiency: { method: 'hob', saving: '20%', note: 'Pre-cooked meat cuts hob time' },
-        prepTime: '15 min',
-        calories: '450 kcal',
-        freshness: 1,
-        costPerPortion: 1.5,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Whole Chicken', nameVeg: 'Firm Tofu', baseQty: 0.15, unit: 'pc', aisle: 'Meat & Fish' },
-            { name: 'Pasta', baseQty: 75, unit: 'g', aisle: 'Pantry' },
-            { name: 'Canned Chopped Tomatoes', baseQty: 0.5, unit: 'can', aisle: 'Pantry' },
-            { name: 'Spinach', baseQty: 50, unit: 'g', aisle: 'Produce' }
-        ],
-        kidHack: "Call the spinach 'Green Power Leaves'.",
-        adultUpgrade: "Add Worcestershire sauce and chilli flakes for a deep umami kick.",
-        hiddenVeg: "Finely chopped spinach 'disappears' in the tomato sauce.",
-        steps: ["Boil pasta.", "Simmer tomatoes with leftover chicken.", "Stir in spinach."]
-    },
-
-    // --- TUESDAY: CHAIN A RECOVERY ---
-    {
-        id: 'tue-bfast',
-        day: 'Tuesday',
-        mealType: 'breakfast',
-        theme: 'Pantry Power',
-        title: 'Honey Yogurt with Oats',
-        titleVeg: 'Honey Yogurt with Oats',
-        energyUsage: 'none',
-        energyEfficiency: { method: 'none', saving: '100%', note: 'Zero fuel' },
-        prepTime: '2 min',
-        calories: '300 kcal',
-        freshness: 2,
-        costPerPortion: 0.7,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Oats', baseQty: 40, unit: 'g', aisle: 'Pantry' },
-            { name: 'Greek Yogurt', baseQty: 50, unit: 'g', aisle: 'Dairy' },
-            { name: 'Honey', baseQty: 0.5, unit: 'tbsp', aisle: 'Pantry' }
-        ],
-        kidHack: "Call it 'Sleepy Porridge'.",
-        adultUpgrade: "Add a pinch of sea salt to the honey.",
-        hiddenVeg: "Whole grain oats for sustained energy.",
-        steps: ["Mix oats and yogurt in a bowl."]
-    },
-    {
-        id: 'tue-lunch',
-        day: 'Tuesday',
-        mealType: 'lunch',
-        theme: 'Wrap It',
-        title: 'Chicken & Bean Burrito Wrap',
-        titleVeg: 'Tofu & Bean Burrito Wrap',
-        chainId: 'chain-a',
-        stepInChain: 4,
-        energyUsage: 'none',
-        energyEfficiency: { method: 'none', saving: '100%', note: 'Cold assembly' },
-        prepTime: '5 min',
-        calories: '400 kcal',
-        freshness: 2,
-        costPerPortion: 1.1,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1626700051175-6818013e184f?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Taco Shells', baseQty: 1, unit: 'pc', aisle: 'Bakery' },
-            { name: 'Canned Black Beans', baseQty: 0.25, unit: 'can', aisle: 'Pantry' },
-            { name: 'Whole Chicken', nameVeg: 'Firm Tofu', baseQty: 0.05, unit: 'pc', aisle: 'Meat & Fish' },
-            { name: 'Greek Yogurt', baseQty: 20, unit: 'g', aisle: 'Dairy' }
-        ],
-        kidHack: "Roll it like a 'treasure scroll'.",
-        adultUpgrade: "Add a squeeze of lime and hot sauce.",
-        hiddenVeg: "Black beans provide hidden fiber and protein.",
-        steps: ["Use leftover chicken.", "Spread yogurt, add chicken and beans, roll."]
-    },
-    {
-        id: 'tue-dinner',
-        day: 'Tuesday',
-        mealType: 'dinner',
-        theme: 'Recovery',
-        title: 'Chicken Bone Soup',
-        titleVeg: 'Vegetable Medley Soup',
-        chainId: 'chain-a',
-        stepInChain: 5,
-        energyUsage: 'hob',
-        energyEfficiency: { method: 'hob', saving: '100%', note: 'Resource recovery from Sunday carcasses' },
-        prepTime: '30 min',
-        calories: '300 kcal',
-        freshness: 3,
-        costPerPortion: 0.5,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1547592110-8036d3c2851d?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Whole Chicken', nameVeg: 'Large Mushrooms', baseQty: 0.1, unit: 'pc', aisle: 'Meat & Fish' },
-            { name: 'Potatoes', baseQty: 100, unit: 'g', aisle: 'Produce' },
-            { name: 'Carrots', baseQty: 50, unit: 'g', aisle: 'Produce' }
-        ],
-        kidHack: "Call it 'Adventure Broth' with potato islands.",
-        adultUpgrade: "Add a splash of Balsamic Vinegar for depth.",
-        hiddenVeg: "Nutrient-dense bone broth or vegetable reduction.",
-        steps: ["Boil chicken carcass (or veg) for stock.", "Add chopped veg and simmer until soft."]
-    },
-
-    // --- REST OF WEEK (SIMPLIFIED FOR REFACTOR) ---
-    {
-        id: 'wed-dinner',
-        day: 'Wednesday',
-        mealType: 'dinner',
-        theme: 'Traybake',
-        title: 'Hidden Veg Beef Bolognese',
-        titleVeg: 'Hidden Veg Lentil Bolognese',
-        energyUsage: 'hob',
-        energyEfficiency: { method: 'hob', saving: '30%', note: 'Bulk prep base' },
-        prepTime: '25 min',
-        calories: '550 kcal',
-        freshness: 2,
-        costPerPortion: 1.8,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Beef Mince', nameVeg: 'Canned Lentils', baseQty: 125, unit: 'g', aisle: 'Meat & Fish' },
-            { name: 'Pasta', baseQty: 75, unit: 'g', aisle: 'Pantry' },
-            { name: 'Canned Chopped Tomatoes', baseQty: 0.5, unit: 'can', aisle: 'Pantry' },
-            { name: 'Carrots', baseQty: 50, unit: 'g', aisle: 'Produce' }
-        ],
-        kidHack: "Vegetables are 'invisible' in the red sauce.",
-        adultUpgrade: "Stir in Balsamic Glaze and extra chilli flakes.",
-        hiddenVeg: "Finely diced carrots and celery blended into sauce.",
-        steps: ["Brown mince/lentils.", "Simmer with tomatoes and diced veg.", "Serve over pasta."]
-    },
-    {
-        id: 'thu-dinner',
-        day: 'Thursday',
-        mealType: 'dinner',
-        theme: 'Curry Night',
-        title: 'Creamy Mild Korma',
-        titleVeg: 'Creamy Chickpea Korma',
-        energyUsage: 'hob',
-        energyEfficiency: { method: 'hob', saving: '25%', note: 'Microwave rice saves energy' },
-        prepTime: '20 min',
-        calories: '600 kcal',
-        freshness: 3,
-        costPerPortion: 2.1,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Chicken Thighs', nameVeg: 'Canned Chickpeas', baseQty: 150, unit: 'g', aisle: 'Meat & Fish' },
-            { name: 'Greek Yogurt', baseQty: 60, unit: 'g', aisle: 'Dairy' },
-            { name: 'Rice', baseQty: 75, unit: 'g', aisle: 'PantryCheck' }
-        ],
-        kidHack: "Call it 'Magic Yellow Stew'.",
-        adultUpgrade: "Add Lime Pickle and fresh coriander.",
-        hiddenVeg: "Pureed cauliflower thickened into the curry base.",
-        steps: ["Cook chicken/chickpeas.", "Stir in yogurt and mild curry paste.", "Serve with rice."]
-    },
-    {
-        id: 'fri-dinner',
-        day: 'Friday',
-        mealType: 'dinner',
-        theme: 'Fakeaway',
-        title: 'Air Fryer Burgers & Chips',
-        titleVeg: 'Air Fryer Halloumi Burgers',
-        energyUsage: 'air_fryer',
-        energyEfficiency: { method: 'air_fryer', saving: '62%', note: 'No oven pre-heat needed' },
-        prepTime: '20 min',
-        calories: '650 kcal',
-        freshness: 3,
-        costPerPortion: 2.2,
-        seasonalMonths: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80',
-        ingredients: [
-            { name: 'Beef Burger Patties', nameVeg: 'Halloumi Blocks', baseQty: 1, unit: 'pc', aisle: 'Meat & Fish' },
-            { name: 'Potatoes', baseQty: 150, unit: 'g', aisle: 'Produce' }
-        ],
-        kidHack: "Draw faces with ketchup.",
-        adultUpgrade: "Add Harissa Paste and lemon zest to the yogurt sauce.",
-        hiddenVeg: "Hand-cut potato wedges (skin on) for better fiber.",
-        steps: ["Air fry chips for 15 mins.", "Air fry patties for 10 mins.", "Assemble."]
-    }
-];
-
-export const BUDGET_MODIFIERS = {
-    savvy: { label: 'Savvy Saver', factor: 0.8, description: 'Budget & Frozen focus' },
-    balanced: { label: 'Everyday Balanced', factor: 1.0, description: 'Fresh & Varied' },
-    premium: { label: 'Premium Quality', factor: 1.5, description: 'Organic & Prime cuts' }
-};
-
 export const AISLES = [
     'Produce',
     'Meat & Fish',
@@ -333,4 +6,117 @@ export const AISLES = [
     'Pantry',
     'Frozen',
     'PantryCheck'
+];
+
+// Energy costs in UK (approx 29p/kWh)
+export const ENERGY_RATES = {
+    oven: 2.1, // kWh per hour
+    air_fryer: 1.2, // kWh per hour
+    hob: 1.5, // kWh per hour
+    microwave: 0.8 // kWh per hour
+};
+
+export const SNACKS = [
+    { id: 's1', name: 'Greek Yogurt & Honey Pots', aisle: 'Dairy', cost: 0.45, energy: 0 },
+    { id: 's2', name: 'Carrot & Cucumber Ribbons', aisle: 'Produce', cost: 0.20, energy: 0 },
+    { id: 's3', name: 'Air-Fried Apple Chips', aisle: 'Produce', cost: 0.30, energy: 0.2 },
+    { id: 's4', name: 'Boiled Egg Protein Pack', aisle: 'Dairy', cost: 0.25, energy: 0.1 }
+];
+
+export const LUNCHBOXES = [
+    { id: 'lb1', name: 'Leftover Chicken Wrap', uses: 'sun-roast', accessories: 'Apple, String Cheese' },
+    { id: 'lb2', name: 'Pasta Salad Box', uses: 'mon-pasta', accessories: 'Cucumber, Yogurt' },
+    { id: 'lb3', name: 'Mini Chili & Rice', uses: 'tue-chili', accessories: 'Orange, Oat Bar' }
+];
+
+export const RECIPES = [
+    // --- WEEK 1: THE CHICKEN CHAIN ---
+    {
+        id: 'w1-d1', day: 'Sunday', mealType: 'dinner',
+        title: 'Sunday Ritual Roast Chicken',
+        kidHack: "The 'Cloud' Mashed Potatoes (Hidden Cauliflower) - Season with zero salt.",
+        adultUpgrade: "Top with Fresh Rosemary & Black Pepper. Add a reduction of pan juices.",
+        prepAlert: "Save the carcass! Tomorrow's lunch boxes depend on it.",
+        chainId: 'chicken-chain', stepInChain: 1,
+        energyType: 'air_fryer', cookingTime: 53, // mins
+        costPerAdult: 2.5, costPerKid: 1.5,
+        rationale: 'Primary protein source. Buying a whole 1.7kg bird saves 40% vs buying breast fillets.',
+        image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=400&q=80',
+        ingredients: [
+            { name: 'Whole Chicken', baseQty: 1, unit: 'pc', aisle: 'Meat & Fish' },
+            { name: 'Potatoes', baseQty: 250, unit: 'g', aisle: 'Produce' },
+            { name: 'Carrots', baseQty: 100, unit: 'g', aisle: 'Produce' },
+            { name: 'Cauliflower', baseQty: 50, unit: 'g', aisle: 'Produce' }
+        ],
+        steps: [
+            "Prep: Mix potato and cauliflower for the mash (The Kid Hack).",
+            "Cook: Chicken at 180°C in Air Fryer for 53 mins.",
+            "Divide: Set aside portions for adults, keep kids' portions low-salt.",
+            "Upgrade: Drizzle adult portions with rosemary butter."
+        ]
+    },
+    {
+        id: 'w1-d2', day: 'Monday', mealType: 'dinner',
+        title: 'Hidden Veg Chicken Pasta',
+        kidHack: "The 'Invisibles' Sauce - Veggies blended into tomato sauce.",
+        adultUpgrade: "Stir in Balsamic Glaze and Chili Flakes for a deep umami hit.",
+        chainId: 'chicken-chain', stepInChain: 2,
+        energyType: 'hob', cookingTime: 15,
+        costPerAdult: 1.8, costPerKid: 1.0,
+        rationale: 'utilizes 250g of Sunday cold-meat. Prep time reduced by 70%.',
+        image: 'https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=400&q=80',
+        ingredients: [
+            { name: 'Pasta', baseQty: 80, unit: 'g', aisle: 'Pantry' },
+            { name: 'Chopped Tomatoes', baseQty: 0.5, unit: 'can', aisle: 'Pantry' },
+            { name: 'Celery', baseQty: 30, unit: 'g', aisle: 'Produce' },
+            { name: 'Onion', baseQty: 0.25, unit: 'pc', aisle: 'Produce' }
+        ],
+        steps: [
+            "Boil pasta according to pack instructions.",
+            "Blend celery and onion into tomato sauce (Kid Hack).",
+            "Mix in shredded leftover chicken (50g per head).",
+            "Split: Adult bowls get the Balsamic & Chili upgrade."
+        ]
+    },
+    // Adding 2 more for logic validation...
+    {
+        id: 'w1-d3', day: 'Tuesday', mealType: 'dinner',
+        title: 'Chicken & Bean Burritos',
+        kidHack: "The 'Treasure Scroll' - No spicy beans inside, extra cheese.",
+        adultUpgrade: "Add Pickled Jalapeños & Sriracha Crème Fraîche.",
+        chainId: 'chicken-chain', stepInChain: 3,
+        energyType: 'microwave', cookingTime: 5,
+        costPerAdult: 1.2, costPerKid: 0.8,
+        image: 'https://images.unsplash.com/photo-1565299585093-997a9981da33?auto=format&fit=crop&w=400&q=80',
+        ingredients: [
+            { name: 'Tortilla Wraps', baseQty: 2, unit: 'pc', aisle: 'Bakery' },
+            { name: 'Black Beans', baseQty: 0.25, unit: 'can', aisle: 'Pantry' },
+            { name: 'Greek Yogurt', baseQty: 30, unit: 'g', aisle: 'Dairy' }
+        ],
+        steps: [
+            "Warm wraps in microwave for 30s.",
+            "Mash beans (mild for kids).",
+            "Fill with chicken & yogurt (The DIY Wrap game).",
+            "Upgrade: Spicy salsa for adults only."
+        ]
+    },
+    {
+        id: 'w1-d4', day: 'Wednesday', mealType: 'dinner',
+        title: 'Garlic Butter Salmon',
+        kidHack: "The 'Pink Fish Power' - Small bites, sweetcorn side.",
+        adultUpgrade: "Lemon Zest & Capers with fresh dill.",
+        energyType: 'hob', cookingTime: 10,
+        costPerAdult: 4.0, costPerKid: 2.5,
+        image: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=400&q=80',
+        ingredients: [
+            { name: 'Salmon Fillets', baseQty: 1, unit: 'pc', aisle: 'Meat & Fish' },
+            { name: 'Sweetcorn', baseQty: 30, unit: 'g', aisle: 'Pantry' },
+            { name: 'Green Beans', baseQty: 50, unit: 'g', aisle: 'Produce' }
+        ],
+        steps: [
+            "Pan-sear salmon for 4 mins each side.",
+            "Blitz kid's portion with corn to make it familiar.",
+            "Top adult salmon with capers and lemon zest."
+        ]
+    }
 ];
